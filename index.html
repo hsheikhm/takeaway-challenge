@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Takeaway App by hsheikhm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Takeaway App</h1>
+      <h2 class="project-tagline">Built in Ruby using SOLID principles and fully test-driven</h2>
+      <a href="https://github.com/hsheikhm/takeaway-challenge" class="btn">View on GitHub</a>
+      <a href="https://github.com/hsheikhm/takeaway-challenge/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/hsheikhm/takeaway-challenge/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="takeaway-challenge--" class="anchor" href="#takeaway-challenge--" aria-hidden="true"><span class="octicon octicon-link"></span></a>Takeaway Challenge <a href="https://travis-ci.org/hsheikhm/takeaway-challenge"><img src="https://travis-ci.org/hsheikhm/takeaway-challenge.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/hsheikhm/takeaway-challenge?branch=master"><img src="https://coveralls.io/repos/hsheikhm/takeaway-challenge/badge.svg?branch=master&amp;service=github" alt="Coverage Status"></a>
+</h1>
+
+<ul>
+<li><a href="#task">Task</a></li>
+<li><a href="#my-approach">My Approach</a></li>
+<li><a href="#directory-structure">Directory Structure</a></li>
+<li><a href="#feature-test-sample">Feature Test Sample</a></li>
+<li><a href="#download-instructions">Download Instructions</a></li>
+</ul>
+
+<h2>
+<a id="task" class="anchor" href="#task" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task</h2>
+
+<h4>
+<a id="write-a-takeaway-program-with-the-following-user-stories" class="anchor" href="#write-a-takeaway-program-with-the-following-user-stories" aria-hidden="true"><span class="octicon octicon-link"></span></a>Write a Takeaway program with the following user stories:</h4>
+
+<pre><code>As a customer
+So that I can check if I want to order something
+I would like to see a list of dishes with prices
+
+As a customer
+So that I can order the meal I want
+I would like to be able to select some number of several available dishes
+
+As a customer
+So that I can verify that my order is correct
+I would like to check that the total I have been given matches the sum of the various dishes in my order
+
+As a customer
+So that I am reassured that my order will be delivered on time
+I would like to receive a text such as "Thank you! Your order was placed and will be delivered before 18:52" after I have ordered
+</code></pre>
+
+<h2>
+<a id="my-approach" class="anchor" href="#my-approach" aria-hidden="true"><span class="octicon octicon-link"></span></a>My Approach</h2>
+
+<p>I started by playing around with the feature tests to understand what objects and methods would need to be created. This helped me to put together a <strong>Domain Model</strong> that I could work from. I then started to write some actual production code so that I could work out how the classes would interact with each other. Once I was happy with what needed to be done I then deleted all my production code and started writing my unit tests. I naturally stuck to the <strong>Red-Green-Refactor</strong> process. After making all my unit tests pass I then started to write the actual code.</p>
+
+<p>The main principles that I wanted to draw upon were those of <strong>Single Responsibility Principle (SRP)</strong> and <strong>Dependency Injection (DI)</strong>. In order to use SRP I made sure to structure my code in 4 separate classes with each having its own responsibility. This naturally made my testing easier and my code easier to read. As for DI, you will see that I had incorporated this into my Takeaway class within the <em>initialize</em> method. As a result I was able to use the London Style (as opposed to Chicago Style) when it came to my RSpec testing since I could use doubles to represent my other class objects. This allowed all my unit tests to become isolated.</p>
+
+<p>To create the <strong>text message</strong> function I used the <strong>Twilio API</strong>.</p>
+
+<p>To carry out SRP I had decided to create 4 separate classes:</p>
+
+<ul>
+<li>
+<a href="https://github.com/hsheikhm/takeaway-challenge/blob/master/lib/takeaway.rb">Takeaway</a> (User interaction, delegating responsibilities, raising errors where relevant)</li>
+<li>
+<a href="https://github.com/hsheikhm/takeaway-challenge/blob/master/lib/order.rb">Order</a> (Responsible for creating new orders, adding items to basket, calculating final costs)</li>
+<li>
+<a href="https://github.com/hsheikhm/takeaway-challenge/blob/master/lib/menu.rb">Menu</a> (To list all dishes and prices)</li>
+<li>
+<a href="https://github.com/hsheikhm/takeaway-challenge/blob/master/lib/textmessenger.rb">TextMessenger</a> (Responsible for sending the text message to user)</li>
+</ul>
+
+<h2>
+<a id="directory-structure" class="anchor" href="#directory-structure" aria-hidden="true"><span class="octicon octicon-link"></span></a>Directory Structure</h2>
+
+<pre><code>├── lib/
+│   ├── menu.rb
+│   ├── order.rb
+│   ├── takeaway.rb
+│   └── textmessenger.rb
+│   
+├── spec/
+│   ├── menu_spec.rb
+│   ├── order_spec.rb
+│   ├── spec_helper.rb
+│   ├── takeaway_spec.rb
+│   └── textmessenger_spec.rb
+│
+</code></pre>
+
+<h2>
+<a id="feature-test-sample" class="anchor" href="#feature-test-sample" aria-hidden="true"><span class="octicon octicon-link"></span></a>Feature Test Sample</h2>
+
+<p><strong><em>New Takeaway Object:</em></strong></p>
+
+<pre><code>2.2.3 :001 &gt; takeaway = Takeaway.new
+</code></pre>
+
+<p><strong><em>User can see the menu:</em></strong></p>
+
+<pre><code>2.2.3 :002 &gt; takeaway.read_menu
+ =&gt; {"Spring Roll"=&gt;0.99, "Fried Prawn"=&gt;2.99, "Egg Fried Rice"=&gt;1.99, "Prawn Cracker"=&gt;0.79, "Sweet and Sour Fish"=&gt;3.99, "Chilli Chicken"=&gt;4.99, "Noodle Soup"=&gt;2.99}
+</code></pre>
+
+<p><strong><em>User can place an order and specify quantity:</em></strong></p>
+
+<pre><code>2.2.3 :003 &gt; takeaway.place_order("Spring Roll", 2)
+ =&gt; "2x Spring Roll(s) added to your basket."
+2.2.3 :004 &gt; takeaway.place_order("Egg Fried Rice", 5)
+ =&gt; "5x Egg Fried Rice(s) added to your basket."
+</code></pre>
+
+<p><strong><em>User can see their shopping basket:</em></strong></p>
+
+<pre><code>2.2.3 :005 &gt; takeaway.basket_summary
+Spring Roll x2 = £1.98, Egg Fried Rice x5 = £9.95
+</code></pre>
+
+<p><strong><em>User can see the total cost:</em></strong></p>
+
+<pre><code>2.2.3 :006 &gt; takeaway.total_cost
+ =&gt; "Total Cost: £11.93"
+</code></pre>
+
+<p><strong><em>User can checkout their order and will receive SMS confirmation:</em></strong></p>
+
+<pre><code>2.2.3 :007 &gt; takeaway.checkout(11.93)
+ =&gt; "You will shortly receive an SMS confirming your order."
+</code></pre>
+
+<h2>
+<a id="download-instructions" class="anchor" href="#download-instructions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download Instructions</h2>
+
+<pre><code>$ git clone https://github.com/hsheikhm/takeaway-challenge.git
+$ cd takeaway-challenge
+$ irb
+</code></pre>
+
+<p>Author: <a href="https://github.com/hsheikhm">Hamza Sheikh</a></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/hsheikhm/takeaway-challenge">Takeaway App</a> is maintained by <a href="https://github.com/hsheikhm">hsheikhm</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
